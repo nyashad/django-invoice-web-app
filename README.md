@@ -1,12 +1,7 @@
-# Invoices App
+# Invoice web App
 
-This web application, built using the Django framework, allows users to generate invoices and send them via email. It is designed to streamline the invoicing process for small businesses, enabling them to efficiently manage their billing operations.
+This web application, developed with the Django framework, streamlines the invoicing process for small businesses by allowing users to generate and email invoices. It is designed to help businesses efficiently manage their billing operations.
 
-## Demo
-
-A quick demo of how to add a new invoice and show its preview.
-
-![Add invoice](docs/gifs/add_invoice.gif)
 
 ## Requirements
 
