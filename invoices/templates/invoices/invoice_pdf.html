@@ -1,0 +1,134 @@
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'invoices/css/render_invoice_pdf_styles.css' %}">
+<header>
+
+  <div class="invoice-info header-item">
+    <h2 class="title left-margin">Design Mania</h2>
+    <div class="invoice-info-detail small-margins left-margin">
+      <h3>Invoice Number:</h3>
+      <p>{{ invoice.sequence_number }}</p>
+      <div class="break"></div>
+      <h3>Date:</h3>
+      <p>{{ invoice.issued_date|date:"d/m/Y" }}</p>
+    </div>
+  </div>
+
+  <div class="logo header-item">
+    <img src="{{ invoice.issuer.company.logo.url }}">
+  </div>
+
+  <div class="company-data header-item">
+    <p>{{ invoice.issuer.company.name|upper }}</p>
+    <p>{{ invoice.issuer.company.address.street|upper }}</p>
+    <p>{{ invoice.issuer.company.address.postal_code|upper }} {{ invoice.issuer.company.address.city|upper }} - {{ invoice.issuer.company.address.state|upper }}</p>
+    <p>CIF &emsp; {{ invoice.issuer.company.customer_information_file_number }}</p>
+  </div>
+
+</header>
+<main>
+  <div class="content-box customer-data">
+    <div class="invoice-info-detail item small-margins left-margin">
+      <h3>Client:</h3>
+      <p>{{ invoice.customer.company.name|upper }}</p>
+    </div>
+    <div class="invoice-info-detail item small-margins left-margin">
+      <h3>Address:</h3>
+      <p>{{ invoice.customer.company.address.street|upper }}, {{ invoice.customer.company.address.postal_code }}, {{ invoice.customer.company.address.city|upper }}</p>
+    </div>
+    <div class="invoice-info-detail item small-margins left-margin">
+      <h3>CIF:</h3>
+      <p>{{ invoice.customer.company.customer_information_file_number }}</p>
+    </div>
+  </div>
+
+  <div class="container-table-products">
+    <table id="products" align="center">
+      <thead>
+        <tr class="no-border">
+          <th colspan="5"></th>
+        </tr>
+        <tr class="no-border"></tr>
+        <tr>
+          <th>Description</th>
+          <th>Packages</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in order_lines %}
+        <tr>
+          <td>{{ order.product.name|upper }}</td>
+          <td></td>
+          <td>{{ order.quantity }}</td>
+          <td>{{ order.unit_price }} R</td>
+          <td class="last-column-bold">{{ order.line_total }} R</td>
+        </tr>
+        {% endfor %}
+        {% for i in empty_rows %}
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="last-column-bold">- R</td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <td class="no-border" colspan="5"></td>
+        </tr>
+        <tr class="no-border"></tr>
+        <tr>
+          <td class="no-border border-top-0"></td>
+          <td class="no-border border-top-0"></td>
+          <td class="left-bold-border align-right top-bold-border border-bottom-0 pr-1" colspan="2">Total</td>
+          <td class="last-column left-bold-border top-bold-border">{{ invoice.sub_total }} R</td>
+        </tr>
+        <tr>
+          <td class="no-border border-top-0"></td>
+          <td class="no-border border-top-0"></td>
+          <td class="left-bold-border border-right-0 align-right border-top-0 border-bottom-0 text-red">Discount</td>
+          <td class="no-border align-right text-red border-top-0 pr-1">{{ invoice.discount_value|floatformat:"0" }}%</td>
+          <td class="last-column left-bold-border">{{ invoice.discount_amount }} R</td>
+        </tr>
+        <tr>
+          <td class="no-border border-top-0" colspan="2"></td>
+          <td class="left-bold-border align-right pr-1 border-top-0 border-bottom-0" colspan="2">Taxable Base</td>
+          <td class="last-column left-bold-border">{{ invoice.tax_base }} R</td>
+        </tr>
+        <tr>
+          <td class="no-border border-top-0" colspan="2"></td>
+          <td class="left-bold-border border-right-0 border-top-0 border-bottom-0 align-right">VAT</td>
+          <td class="no-border align-right pr-1 border-top-0 border-bottom-0">{{ invoice.tax_value|floatformat:"0" }}%</td>
+          <td class="last-column left-bold-border">{{ invoice.tax_amount }} R</td>
+        </tr>
+        <tr>
+          <td class="no-border border-top-0" colspan="2"></td>
+          <td class="left-bold-border bottom-bold-border border-top-0 align-right pr-1 text-bold" colspan="2">Total Invoice</td>
+          <td class="last-column-bold left-bold-border bottom-bold-border">{{ invoice.total_due }} R</td>
+        </tr>
+        <tr>
+          <td class="no-border" colspan="5"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="content-box payment-data">
+    <div class="payment-info-detail item small-margins">
+      <h3>Design Mania</h3>
+      <p>Unit 4, No. 2 Sienna Drive, Burgundy Estate<br>&emsp;&emsp; IBAN: {{ invoice.issuer.company.bank_account_number }}</p>
+    </div>
+  </div>
+
+</main>
+<footer>
+  <p>Cape Town</p>
+  <p>South Africa</p>
+  <p>7441</p>
+  <p>www.designmania.co.za</p>
+</footer>
+
+{% endblock %}
